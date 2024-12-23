@@ -1,0 +1,8 @@
+venv
+.idea
+.env
+.venv
+!/cloud_sql_proxy
+src/other
+/cloud_sql_proxy
+**/__pycache__
