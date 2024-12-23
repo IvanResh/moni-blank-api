@@ -1,6 +1,7 @@
 from asyncpg import Record
 
 from db.db_context import DbContext
+from domain import AccountDb
 
 
 class AccountRepository:
@@ -20,3 +21,19 @@ class AccountRepository:
 
         async with self._db_context.get_connection() as connection:
             return await connection.fetchrow(query, id)
+
+    async def insert_account(
+        self,
+        item: AccountDb,
+    ) -> AccountDb | None:
+        query = """
+            insert into account (name)
+            values ($1)
+            on conflict do nothing;
+        """
+
+        async with self._db_context.get_connection() as connection:
+            row = await connection.fetchrow(query, item.name)
+        if not row:
+            return None
+        return AccountDb.parse_obj(row)
